@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\marce\\OneDrive\\Escritorio\\Pruebas ventas\\BackVentasADO\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3D75ABD7-3A3D-45B6-99CD-63960DAE4C4A}|BackVentasADO\\BackVentasADO.csproj|C:\\Users\\marce\\OneDrive\\Escritorio\\Pruebas ventas\\BackVentasADO\\backventasado\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{3D75ABD7-3A3D-45B6-99CD-63960DAE4C4A}|BackVentasADO\\BackVentasADO.csproj|solutionrelative:backventasado\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{74946827-37a0-11d2-a273-00c04f8ef4ff}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\Users\\marce\\OneDrive\\Escritorio\\Pruebas ventas\\BackVentasADO\\BackVentasADO\\Web.config",
+              "RelativeDocumentMoniker": "BackVentasADO\\Web.config",
+              "ToolTip": "C:\\Users\\marce\\OneDrive\\Escritorio\\Pruebas ventas\\BackVentasADO\\BackVentasADO\\Web.config",
+              "RelativeToolTip": "BackVentasADO\\Web.config",
+              "ViewState": "AgIAADIAAAAAAAAAAAAAAEEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-07-31T16:20:34.779Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
