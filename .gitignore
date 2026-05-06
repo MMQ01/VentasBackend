@@ -5,3 +5,5 @@
 /.vs/BackVentasADO/v17/DocumentLayout.json
 /.vs
 /.vs/
+/BackVentasADO/bin
+/BackVentasADO/obj/Debug/BackVentasADO.csproj.AssemblyReference.cache
