@@ -1,4 +1,4 @@
-using BackVentasADO;
+﻿using BackVentasADO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +23,6 @@ namespace BackVentasADO
             GlobalConfiguration.Configuration.Formatters.Clear();
             GlobalConfiguration.Configuration.Formatters.Add(new JsonMediaTypeFormatter());
         }
+
     }
 }

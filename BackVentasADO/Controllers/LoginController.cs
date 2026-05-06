@@ -32,51 +32,57 @@ namespace BackVentasADO.Controllers
             try
             {
 
-                var cliente = _context.Cliente.FirstOrDefault(x => x.Identificacion == login.identificacion);
+                var usuario = (from USU in _context.Usuarios
+                               where USU.Login == login.Login &&
+                                      USU.Contrasena == login.Password
+                               select USU).FirstOrDefault();
+         
 
 
-                if (cliente == null)
+                if (usuario == null)
                 {
-                    resultado.respuesta = "Cliente no existe";
-                    resultado.mensaje = "Error";
+                    resultado.Mensaje = "Usuario no existe";
+                    resultado.Respuesta = "ERROR";
                     return resultado;
                 }
-                if (cliente.Estado != "SI")
+                if (!usuario.Estado)
                 {
-                    resultado.respuesta = "Cliente Inactivo";
-                    resultado.mensaje = "Error";
+                    resultado.Mensaje = "Usuario Inactivo";
+                    resultado.Respuesta = "ERROR";
                     return resultado;
                 }
-                if (cliente.Contraseña != login.contraseña)
+                if (usuario.Contrasena != login.Password)
                 {
-                    resultado.respuesta = "Error en la contraseña";
-                    resultado.mensaje = "Error";
+                    resultado.Mensaje = "Error en la contraseña";
+                    resultado.Respuesta = "ERROR";
                     return resultado;
                 }
 
-                var token = GenerarTokenJWT(cliente);
+                var token = GenerarTokenJWT(usuario);
 
-                var clienteDto = new ClienteDTO
-                {
-                    id = cliente.Id,
-                    identificacion = cliente.Identificacion,
-                    nombre = cliente.Nombre,
-                    estado = cliente.Estado,
-                    email = cliente.Email,
-                    fechaCreacion = cliente.FechaCreacion,
-                    idCategoria = cliente.IdCategoria
-                    
-                };
-                resultado.respuesta = clienteDto;
+                UsuarioDTO usuarioData = new UsuarioDTO();
 
-                resultado.mensaje = "OK";
-                resultado.token = token;
+                usuarioData.Id = usuario.Id;
+                usuarioData.Login = usuario.Login;
+                usuarioData.Nombres = usuario.Nombres;
+                usuarioData.Apellidos = usuario.Apellidos;
+                usuarioData.Estado = usuario.Estado ? true : false;
+                usuarioData.CategoriaId = usuario.Categoria;
+
+                var NombreCategoria = _context.Categorias.FirstOrDefault(x => x.Id == usuario.Categoria).Nombre;
+
+                usuarioData.NombreCategoria = string.IsNullOrEmpty(NombreCategoria) ? "Sin categoria" : NombreCategoria;
+
+
+                resultado.Respuesta = "OK";
+                resultado.Usuario = usuarioData;
+                resultado.Token = token;
                 return resultado;
             }
             catch (Exception ex)
             {
-                resultado.respuesta = ex.Message;
-                resultado.mensaje = "Error";
+                resultado.Respuesta = ex.Message;
+                resultado.Mensaje = "ERROR";
                 return resultado;
             }
 
@@ -84,7 +90,7 @@ namespace BackVentasADO.Controllers
         }
 
 
-        private string GenerarTokenJWT(Cliente usuarioInfo)
+        private string GenerarTokenJWT(Usuarios usuarioInfo)
         {
             try
             {
@@ -99,7 +105,7 @@ namespace BackVentasADO.Controllers
 
                 // Claims
                 var _Claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Email, usuarioInfo.Email),
+                new Claim(JwtRegisteredClaimNames.Name, usuarioInfo.Login),
             };
 
                 // Payload

@@ -1,40 +1,150 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="VentasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="VentasEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Asignacion_Clientes" EntityType="VentasModel.Asignacion_Clientes" />
+    <EntitySet Name="Categorias" EntityType="VentasModel.Categorias" />
+    <EntitySet Name="PedidoDetalle" EntityType="VentasModel.PedidoDetalle" />
+    <EntitySet Name="Usuarios" EntityType="VentasModel.Usuarios" />
+    <AssociationSet Name="FK_Asignacion_Clientes_Usuarios" Association="VentasModel.FK_Asignacion_Clientes_Usuarios">
+      <End Role="Usuarios" EntitySet="Usuarios" />
+      <End Role="Asignacion_Clientes" EntitySet="Asignacion_Clientes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Usuarios_Categorias" Association="VentasModel.FK_Usuarios_Categorias">
+      <End Role="Categorias" EntitySet="Categorias" />
+      <End Role="Usuarios" EntitySet="Usuarios" />
+    </AssociationSet>
+    <EntitySet Name="Clientes" EntityType="VentasModel.Clientes" />
+    <AssociationSet Name="FK_Asignacion_Clientes_Clientes" Association="VentasModel.FK_Asignacion_Clientes_Clientes">
+      <End Role="Clientes" EntitySet="Clientes" />
+      <End Role="Asignacion_Clientes" EntitySet="Asignacion_Clientes" />
+    </AssociationSet>
+    <EntitySet Name="Productos" EntityType="VentasModel.Productos" />
+    <AssociationSet Name="FK_PedidoDetalle_Productos" Association="VentasModel.FK_PedidoDetalle_Productos">
+      <End Role="Productos" EntitySet="Productos" />
+      <End Role="PedidoDetalle" EntitySet="PedidoDetalle" />
+    </AssociationSet>
+    <EntitySet Name="Pedidos" EntityType="VentasModel.Pedidos" />
+    <AssociationSet Name="FK_Pedidos_Clientes" Association="VentasModel.FK_Pedidos_Clientes">
+      <End Role="Clientes" EntitySet="Clientes" />
+      <End Role="Pedidos" EntitySet="Pedidos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PedidoDetalle_Pedidos" Association="VentasModel.FK_PedidoDetalle_Pedidos">
+      <End Role="Pedidos" EntitySet="Pedidos" />
+      <End Role="PedidoDetalle" EntitySet="PedidoDetalle" />
+    </AssociationSet>
+    <EntitySet Name="Productos_Favoritos" EntityType="VentasModel.Productos_Favoritos" />
+    <AssociationSet Name="FK_Productos_Favoritos_Productos" Association="VentasModel.FK_Productos_Favoritos_Productos">
+      <End Role="Productos" EntitySet="Productos" />
+      <End Role="Productos_Favoritos" EntitySet="Productos_Favoritos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Productos_Favoritos_Usuarios" Association="VentasModel.FK_Productos_Favoritos_Usuarios">
+      <End Role="Usuarios" EntitySet="Usuarios" />
+      <End Role="Productos_Favoritos" EntitySet="Productos_Favoritos" />
+    </AssociationSet>
+    <EntitySet Name="tmp_carrito" EntityType="VentasModel.tmp_carrito" />
+    <AssociationSet Name="FK_tmp_carrito_Productos" Association="VentasModel.FK_tmp_carrito_Productos">
+      <End Role="Productos" EntitySet="Productos" />
+      <End Role="tmp_carrito" EntitySet="tmp_carrito" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tmp_carrito_Usuarios" Association="VentasModel.FK_tmp_carrito_Usuarios">
+      <End Role="Usuarios" EntitySet="Usuarios" />
+      <End Role="tmp_carrito" EntitySet="tmp_carrito" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Asignacion_Clientes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Usuario_Id" Type="Int32" Nullable="false" />
+    <Property Name="Cliente_Id" Type="Int32" Nullable="false" />
+    <Property Name="Estado" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Usuarios" Relationship="VentasModel.FK_Asignacion_Clientes_Usuarios" FromRole="Asignacion_Clientes" ToRole="Usuarios" />
+    <NavigationProperty Name="Clientes" Relationship="VentasModel.FK_Asignacion_Clientes_Clientes" FromRole="Asignacion_Clientes" ToRole="Clientes" />
+  </EntityType>
   <EntityType Name="Categorias">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Nombre" Type="String" MaxLength="45" FixedLength="false" Unicode="true" Nullable="false" />
-    <NavigationProperty Name="Cliente" Relationship="Self.FK_Cliente_Categorias" FromRole="Categorias" ToRole="Cliente" />
+    <Property Name="Nombre" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Usuarios" Relationship="VentasModel.FK_Usuarios_Categorias" FromRole="Categorias" ToRole="Usuarios" />
   </EntityType>
-  <EntityType Name="Cliente">
+  <EntityType Name="PedidoDetalle">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Nombre" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="Contraseña" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
-    <Property Name="Estado" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
-    <Property Name="IdCategoria" Type="Int32" Nullable="false" />
-    <Property Name="Identificacion" Type="Int32" Nullable="false" />
-    <NavigationProperty Name="Categorias" Relationship="Self.FK_Cliente_Categorias" FromRole="Cliente" ToRole="Categorias" />
-    <NavigationProperty Name="Pedidos" Relationship="Self.FK__Pedidos__IdClien__3E52440B" FromRole="Cliente" ToRole="Pedidos" />
+    <Property Name="IdPedido" Type="Int32" Nullable="false" />
+    <Property Name="IdProducto" Type="Int32" Nullable="false" />
+    <Property Name="Cantidad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <NavigationProperty Name="Productos" Relationship="VentasModel.FK_PedidoDetalle_Productos" FromRole="PedidoDetalle" ToRole="Productos" />
+    <NavigationProperty Name="Pedidos" Relationship="VentasModel.FK_PedidoDetalle_Pedidos" FromRole="PedidoDetalle" ToRole="Pedidos" />
   </EntityType>
-  <EntityType Name="Pedidos">
+  <EntityType Name="Usuarios">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="IdCliente" Type="Int32" Nullable="false" />
-    <Property Name="Total" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-    <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="Estado" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="Cliente" Relationship="Self.FK__Pedidos__IdClien__3E52440B" FromRole="Pedidos" ToRole="Cliente" />
-    <NavigationProperty Name="Productos_Pedidos" Relationship="Self.FK__Productos__IdPed__412EB0B6" FromRole="Pedidos" ToRole="Productos_Pedidos" />
+    <Property Name="Nombres" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Apellidos" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Contrasena" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Estado" Type="Boolean" Nullable="false" />
+    <Property Name="Categoria" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Asignacion_Clientes" Relationship="VentasModel.FK_Asignacion_Clientes_Usuarios" FromRole="Usuarios" ToRole="Asignacion_Clientes" />
+    <NavigationProperty Name="Categorias" Relationship="VentasModel.FK_Usuarios_Categorias" FromRole="Usuarios" ToRole="Categorias" />
+    <NavigationProperty Name="Productos_Favoritos" Relationship="VentasModel.FK_Productos_Favoritos_Usuarios" FromRole="Usuarios" ToRole="Productos_Favoritos" />
+    <NavigationProperty Name="tmp_carrito" Relationship="VentasModel.FK_tmp_carrito_Usuarios" FromRole="Usuarios" ToRole="tmp_carrito" />
   </EntityType>
+  <Association Name="FK_Asignacion_Clientes_Usuarios">
+    <End Type="VentasModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+    <End Type="VentasModel.Asignacion_Clientes" Role="Asignacion_Clientes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuarios">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Asignacion_Clientes">
+        <PropertyRef Name="Usuario_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Usuarios_Categorias">
+    <End Type="VentasModel.Categorias" Role="Categorias" Multiplicity="1" />
+    <End Type="VentasModel.Usuarios" Role="Usuarios" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Categorias">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Usuarios">
+        <PropertyRef Name="Categoria" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Clientes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Direccion" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="Nit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Estado" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Asignacion_Clientes" Relationship="VentasModel.FK_Asignacion_Clientes_Clientes" FromRole="Clientes" ToRole="Asignacion_Clientes" />
+    <NavigationProperty Name="Pedidos" Relationship="VentasModel.FK_Pedidos_Clientes" FromRole="Clientes" ToRole="Pedidos" />
+  </EntityType>
+  <Association Name="FK_Asignacion_Clientes_Clientes">
+    <End Type="VentasModel.Clientes" Role="Clientes" Multiplicity="1" />
+    <End Type="VentasModel.Asignacion_Clientes" Role="Asignacion_Clientes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clientes">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Asignacion_Clientes">
+        <PropertyRef Name="Cliente_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityType Name="Productos">
     <Key>
       <PropertyRef Name="Id" />
@@ -43,49 +153,44 @@
     <Property Name="Nombre" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Precio" Type="Decimal" Precision="18" Scale="2" />
     <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-    <Property Name="Estado" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="Productos_Pedidos" Relationship="Self.FK__Productos__IdPro__4222D4EF" FromRole="Productos" ToRole="Productos_Pedidos" />
+    <Property Name="Estado" Type="Boolean" />
+    <Property Name="SKU" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="Stock" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+    <NavigationProperty Name="PedidoDetalle" Relationship="VentasModel.FK_PedidoDetalle_Productos" FromRole="Productos" ToRole="PedidoDetalle" />
+    <NavigationProperty Name="Productos_Favoritos" Relationship="VentasModel.FK_Productos_Favoritos_Productos" FromRole="Productos" ToRole="Productos_Favoritos" />
+    <NavigationProperty Name="tmp_carrito" Relationship="VentasModel.FK_tmp_carrito_Productos" FromRole="Productos" ToRole="tmp_carrito" />
   </EntityType>
-  <EntityType Name="Productos_Pedidos">
+  <Association Name="FK_PedidoDetalle_Productos">
+    <End Type="VentasModel.Productos" Role="Productos" Multiplicity="1" />
+    <End Type="VentasModel.PedidoDetalle" Role="PedidoDetalle" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Productos">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PedidoDetalle">
+        <PropertyRef Name="IdProducto" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Pedidos">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="IdPedido" Type="Int32" Nullable="false" />
-    <Property Name="IdProducto" Type="Int32" Nullable="false" />
-    <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-    <NavigationProperty Name="Pedidos" Relationship="Self.FK__Productos__IdPed__412EB0B6" FromRole="Productos_Pedidos" ToRole="Pedidos" />
-    <NavigationProperty Name="Productos" Relationship="Self.FK__Productos__IdPro__4222D4EF" FromRole="Productos_Pedidos" ToRole="Productos" />
+    <Property Name="IdCliente" Type="Int32" Nullable="false" />
+    <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Estado" Type="Boolean" />
+    <Property Name="Origen" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Clientes" Relationship="VentasModel.FK_Pedidos_Clientes" FromRole="Pedidos" ToRole="Clientes" />
+    <NavigationProperty Name="PedidoDetalle" Relationship="VentasModel.FK_PedidoDetalle_Pedidos" FromRole="Pedidos" ToRole="PedidoDetalle" />
   </EntityType>
-  <EntityType Name="sysdiagrams">
-    <Key>
-      <PropertyRef Name="diagram_id" />
-    </Key>
-    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="principal_id" Type="Int32" Nullable="false" />
-    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="version" Type="Int32" />
-    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-  </EntityType>
-  <Association Name="FK_Cliente_Categorias">
-    <End Role="Categorias" Type="Self.Categorias" Multiplicity="1" />
-    <End Role="Cliente" Type="Self.Cliente" Multiplicity="*" />
+  <Association Name="FK_Pedidos_Clientes">
+    <End Type="VentasModel.Clientes" Role="Clientes" Multiplicity="1" />
+    <End Type="VentasModel.Pedidos" Role="Pedidos" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Categorias">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Cliente">
-        <PropertyRef Name="IdCategoria" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK__Pedidos__IdClien__3E52440B">
-    <End Role="Cliente" Type="Self.Cliente" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="Pedidos" Type="Self.Pedidos" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Cliente">
+      <Principal Role="Clientes">
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="Pedidos">
@@ -93,54 +198,85 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Productos__IdPed__412EB0B6">
-    <End Role="Pedidos" Type="Self.Pedidos" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="Productos_Pedidos" Type="Self.Productos_Pedidos" Multiplicity="*" />
+  <Association Name="FK_PedidoDetalle_Pedidos">
+    <End Type="VentasModel.Pedidos" Role="Pedidos" Multiplicity="1" />
+    <End Type="VentasModel.PedidoDetalle" Role="PedidoDetalle" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Pedidos">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="Productos_Pedidos">
+      <Dependent Role="PedidoDetalle">
         <PropertyRef Name="IdPedido" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Productos__IdPro__4222D4EF">
-    <End Role="Productos" Type="Self.Productos" Multiplicity="1" />
-    <End Role="Productos_Pedidos" Type="Self.Productos_Pedidos" Multiplicity="*" />
+  <EntityType Name="Productos_Favoritos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UsuarioID" Type="Int32" Nullable="false" />
+    <Property Name="ProductoID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Productos" Relationship="VentasModel.FK_Productos_Favoritos_Productos" FromRole="Productos_Favoritos" ToRole="Productos" />
+    <NavigationProperty Name="Usuarios" Relationship="VentasModel.FK_Productos_Favoritos_Usuarios" FromRole="Productos_Favoritos" ToRole="Usuarios" />
+  </EntityType>
+  <Association Name="FK_Productos_Favoritos_Productos">
+    <End Type="VentasModel.Productos" Role="Productos" Multiplicity="1" />
+    <End Type="VentasModel.Productos_Favoritos" Role="Productos_Favoritos" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Productos">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="Productos_Pedidos">
-        <PropertyRef Name="IdProducto" />
+      <Dependent Role="Productos_Favoritos">
+        <PropertyRef Name="ProductoID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityContainer Name="VentasEntities" annotation:LazyLoadingEnabled="true">
-    <EntitySet Name="Categorias" EntityType="Self.Categorias" />
-    <EntitySet Name="Cliente" EntityType="Self.Cliente" />
-    <EntitySet Name="Pedidos" EntityType="Self.Pedidos" />
-    <EntitySet Name="Productos" EntityType="Self.Productos" />
-    <EntitySet Name="Productos_Pedidos" EntityType="Self.Productos_Pedidos" />
-    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
-    <AssociationSet Name="FK_Cliente_Categorias" Association="Self.FK_Cliente_Categorias">
-      <End Role="Categorias" EntitySet="Categorias" />
-      <End Role="Cliente" EntitySet="Cliente" />
-    </AssociationSet>
-    <AssociationSet Name="FK__Pedidos__IdClien__3E52440B" Association="Self.FK__Pedidos__IdClien__3E52440B">
-      <End Role="Cliente" EntitySet="Cliente" />
-      <End Role="Pedidos" EntitySet="Pedidos" />
-    </AssociationSet>
-    <AssociationSet Name="FK__Productos__IdPed__412EB0B6" Association="Self.FK__Productos__IdPed__412EB0B6">
-      <End Role="Pedidos" EntitySet="Pedidos" />
-      <End Role="Productos_Pedidos" EntitySet="Productos_Pedidos" />
-    </AssociationSet>
-    <AssociationSet Name="FK__Productos__IdPro__4222D4EF" Association="Self.FK__Productos__IdPro__4222D4EF">
-      <End Role="Productos" EntitySet="Productos" />
-      <End Role="Productos_Pedidos" EntitySet="Productos_Pedidos" />
-    </AssociationSet>
-  </EntityContainer>
+  <Association Name="FK_Productos_Favoritos_Usuarios">
+    <End Type="VentasModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+    <End Type="VentasModel.Productos_Favoritos" Role="Productos_Favoritos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuarios">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Productos_Favoritos">
+        <PropertyRef Name="UsuarioID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="tmp_carrito">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Usuario_Id" Type="Int32" Nullable="false" />
+    <Property Name="Producto_Id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Productos" Relationship="VentasModel.FK_tmp_carrito_Productos" FromRole="tmp_carrito" ToRole="Productos" />
+    <NavigationProperty Name="Usuarios" Relationship="VentasModel.FK_tmp_carrito_Usuarios" FromRole="tmp_carrito" ToRole="Usuarios" />
+    <Property Name="Cantidad" Type="Double" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_tmp_carrito_Productos">
+    <End Type="VentasModel.Productos" Role="Productos" Multiplicity="1" />
+    <End Type="VentasModel.tmp_carrito" Role="tmp_carrito" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Productos">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tmp_carrito">
+        <PropertyRef Name="Producto_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tmp_carrito_Usuarios">
+    <End Type="VentasModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+    <End Type="VentasModel.tmp_carrito" Role="tmp_carrito" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuarios">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="tmp_carrito">
+        <PropertyRef Name="Usuario_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

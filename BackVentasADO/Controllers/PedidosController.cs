@@ -1,12 +1,14 @@
-﻿using BackVentasADO.Models.Clases.DTO;
+﻿using BackVentasADO.Clases.DTO;
+using BackVentasADO.Controllers.Services;
 using BackVentasADO.Models.Clases;
+using BackVentasADO.Models.Clases.DTO;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using BackVentasADO.Controllers.Services;
 
 
 namespace BackVentasADO.Controllers
@@ -16,149 +18,385 @@ namespace BackVentasADO.Controllers
 
         PedidoServices _pedidoServices = new PedidoServices();
 
-        [HttpPost]
+        [HttpGet]
         [Route("api/Pedidos")]
-        public Resultado guardarPedido(CrearPedidoViewModel pedido)
+        public csListaPedidos listarPedidos()
         {
-            Resultado res = new Resultado();
+            csListaPedidos res = new csListaPedidos();
             try
             {
 
+                var lista = _pedidoServices.getListaPedidos();
 
-                res.respuesta = _pedidoServices.guardarPedido(pedido);
-                res.mensaje = "OK";
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Pedidos = lista.Lista_Pedidos;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
             return res;
         }
 
         [HttpGet]
-        [Route("api/Pedidos/{identificacion:int}")]
-
-        public Resultado listarPedidosXCliente(int identificacion)
+        [Route("api/Pedidos/Cliente")]
+        public csListaPedidos listarPedidosXCliente(int identificacion)
         {
-            Resultado res = new Resultado();
+            csListaPedidos res = new csListaPedidos();
             try
             {
 
-                var lista = _pedidoServices.verPedidosXCliente(identificacion);
-                res.respuesta = lista;
-                if (lista == null)
+                var lista = _pedidoServices.getListaPedidosXCliente(identificacion);
+
+                if (lista.Respuesta == "OK")
                 {
-                    res.respuesta = "Sin pedidos";
+
+                    res.Respuesta = "OK";
+                    res.Lista_Pedidos = lista.Lista_Pedidos;
+
                 }
-                res.mensaje = "OK";
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+            return res;
+        }
+
+        [HttpGet]
+        [Route("api/Pedidos/Usuario")]
+        public csListaPedidos listarPedidosXUsuario(int identificacion)
+        {
+            csListaPedidos res = new csListaPedidos();
+            try
+            {
+
+                var lista = _pedidoServices.getListaPedidosXUsuario(identificacion);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Pedidos = lista.Lista_Pedidos;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+            return res;
+        }
+
+        [HttpGet]
+        [Route("api/Pedidos")]
+        public csPedido getPedido(int pedidoID)
+        {
+            csPedido res = new csPedido();
+            try
+            {
+
+                var lPedido = _pedidoServices.getPedido(pedidoID);
+
+                if (lPedido.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Pedido = lPedido.Pedido;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lPedido.Mensaje;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
             return res;
         }
 
         [HttpPost]
-        [Route("api/Pedidos/InactivarPedido")]
-        public Resultado inactivarPedido([FromBody] int id)
+        [Route("api/Pedidos")]
+        public Resultado guardarPedido(PedidoDTO pedido)
         {
             Resultado res = new Resultado();
             try
             {
 
-                var pedido = _pedidoServices.inactivarPedido(id);
 
-                res.respuesta = pedido;
-                res.mensaje = "OK";
+                var respuesta = _pedidoServices.guardarPedido(pedido);
+
+
+                if (respuesta.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = respuesta.Mensaje;
+                }
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
             return res;
         }
 
+       
+
         [HttpPost]
-        [Route("api/Pedidos/ActivarPedido")]
-        public Resultado activarPedido([FromBody] int id)
+        [Route("api/Pedidos/InactivarPedido/{PedidoID:int}")]
+        public Resultado inactivarPedido([FromBody] int PedidoID)
         {
             Resultado res = new Resultado();
             try
             {
 
-                var pedido = _pedidoServices.activarPedido(id);
+                var lista = _pedidoServices.inactivarPedido(PedidoID);
 
-                res.respuesta = pedido;
-                res.mensaje = "OK";
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
             return res;
+        }
 
+        [HttpPost]
+        [Route("api/Pedidos/ActivarPedido/{PedidoID:int}")]
+        public Resultado activarPedido([FromBody] int PedidoID)
+        {
+            Resultado res = new Resultado();
+            try
+            {
+
+                var lista = _pedidoServices.activarPedido(PedidoID);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+            return res;
+
+        }
+
+
+
+        //=== CARRITO ===
+
+        [HttpGet]
+        [Route("api/Pedidos/Carrito")]
+        public csCarrito getCarritoXUsuario(int UsuarioID)
+        {
+            csCarrito res = new csCarrito();
+            try
+            {
+
+                var lista = _pedidoServices.getListaProductosCarrito(UsuarioID);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Productos = lista.Lista_Productos;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+            return res;
+        }
+
+
+        [HttpDelete]
+        [Route("api/Pedidos/Carrito/Producto")]
+        public Resultado eliminarProductoCarrito(int UsuarioID, int ProductoID)
+        {
+            Resultado res = new Resultado();
+            try
+            {
+
+                var lista = _pedidoServices.eliminarProductoCarrito(UsuarioID, ProductoID);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = lista.Respuesta;
+                    res.Mensaje = lista.Mensaje;
+                }
+                else
+                {
+                    res.Respuesta = lista.Respuesta;
+                    res.Mensaje = lista.Mensaje;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+            return res;
         }
 
         [HttpDelete]
-        [Route("api/Pedidos")]
-        public Resultado borrarPedido(int id)
+        [Route("api/Pedidos/Carrito")]
+        public Resultado eliminarCarrito(int UsuarioID)
         {
             Resultado res = new Resultado();
             try
             {
 
-                var pedido = _pedidoServices.borrarPedido(id);
+                var lista = _pedidoServices.eliminarCarrito(UsuarioID);
 
-                res.respuesta = pedido;
-                res.mensaje = "OK";
-            }
-            catch (Exception)
-            {
-
-                res.mensaje = "Error";
-                return res;
-            }
-
-            return res;
-        }
-
-        [HttpGet]
-        [Route("api/Pedidos")]
-        public Resultado listarPedidos()
-        {
-            Resultado res = new Resultado();
-            try
-            {
-
-                var lista = _pedidoServices.verPedidos();
-                res.respuesta = lista;
-                if (lista == null)
+                if (lista.Respuesta == "OK")
                 {
-                    res.respuesta = "Sin pedidos";
+
+                    res.Respuesta = lista.Respuesta;
+                    res.Mensaje = lista.Mensaje;
                 }
-                res.mensaje = "OK";
+                else
+                {
+                    res.Respuesta = lista.Respuesta;
+                    res.Mensaje = lista.Mensaje;
+                }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
-
             return res;
         }
+
+
+        [HttpPost]
+        [Route("api/Pedidos/Carrito")]
+        public Resultado setProductoCarrito([FromBody] csCarritoUpdate carrito)
+        {
+            Resultado res = new Resultado();
+            try
+            {
+
+                var lista = _pedidoServices.actualizarProductoCarrito(carrito.Usuario_ID, carrito.Producto_ID, carrito.Cantidad);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = lista.Respuesta;
+                    res.Mensaje = lista.Mensaje;
+                }
+                else
+                {
+                    res.Respuesta = lista.Respuesta;
+                    res.Mensaje = lista.Mensaje;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+            return res;
+        }
+
     }
 }

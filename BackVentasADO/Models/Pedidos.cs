@@ -17,17 +17,19 @@ namespace BackVentasADO.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Pedidos()
         {
-            this.Productos_Pedidos = new HashSet<Productos_Pedidos>();
+            this.PedidoDetalle = new HashSet<PedidoDetalle>();
         }
     
         public int Id { get; set; }
         public int IdCliente { get; set; }
         public decimal Total { get; set; }
         public System.DateTime FechaCreacion { get; set; }
-        public string Estado { get; set; }
+        public Nullable<bool> Estado { get; set; }
+        public string Origen { get; set; }
+        public int IdUsuario { get; set; }
     
-        public virtual Cliente Cliente { get; set; }
+        public virtual Clientes Clientes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Productos_Pedidos> Productos_Pedidos { get; set; }
+        public virtual ICollection<PedidoDetalle> PedidoDetalle { get; set; }
     }
 }

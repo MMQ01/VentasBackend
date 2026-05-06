@@ -17,16 +17,24 @@ namespace BackVentasADO.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Productos()
         {
-            this.Productos_Pedidos = new HashSet<Productos_Pedidos>();
+            this.PedidoDetalle = new HashSet<PedidoDetalle>();
+            this.Productos_Favoritos = new HashSet<Productos_Favoritos>();
+            this.tmp_carrito = new HashSet<tmp_carrito>();
         }
     
         public int Id { get; set; }
         public string Nombre { get; set; }
         public Nullable<decimal> Precio { get; set; }
         public string Descripcion { get; set; }
-        public string Estado { get; set; }
+        public Nullable<bool> Estado { get; set; }
+        public string SKU { get; set; }
+        public decimal Stock { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Productos_Pedidos> Productos_Pedidos { get; set; }
+        public virtual ICollection<PedidoDetalle> PedidoDetalle { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Productos_Favoritos> Productos_Favoritos { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tmp_carrito> tmp_carrito { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace BackVentasADO
         {
             // Configuración y servicios de Web API
             // Habilitar CORS para todos los orígenes, todos los métodos y todos los encabezados
-            var cors = new EnableCorsAttribute("*", "*", "*");
-            config.EnableCors(cors);
+            //var cors = new EnableCorsAttribute("*", "*", "*");
+            //config.EnableCors(cors);
 
             // Configuración para que JSON use camelCase
             var jsonFormatter = config.Formatters.JsonFormatter;

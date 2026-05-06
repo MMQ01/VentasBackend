@@ -2,43 +2,82 @@
 using BackVentasADO.Models.Clases;
 using BackVentasADO.Models.Clases.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 //using System.Web.Mvc;
 
 namespace BackVentasADO.Controllers
 {
-    public class clientesController : ApiController
+    public class ClientesController : ApiController
     {
 
 
-        private clienteServices _clientesService = new clienteServices();
+        private ClienteServices _clientesService = new ClienteServices();
 
-        //public clientesController(clienteServices clienteService)
-        //{
-        //    _clientesService = clienteService;
-        //}
 
 
         [HttpGet]
         [Route("api/Clientes")]
-        public Resultado getClientes()
+        public csListaCliente getClientes()
         {
-            Resultado res = new Resultado();
+            csListaCliente res = new csListaCliente();
             try
             {
 
                 var lista = _clientesService.GetClientes();
-                res.respuesta = lista;
-                res.mensaje = "OK";
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Clientes = lista.Lista_Clientes;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+
+                res.Respuesta = "OK";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "Error";
+                return res;
+            }
+            return res;
+        }
+
+        [HttpGet]
+        [Route("api/Clientes")]
+        public csListaCliente getClientesXUsuario( int Usuario)
+        {
+            csListaCliente res = new csListaCliente();
+            try
+            {
+
+                var lista = _clientesService.GetClientesXUsuario(Usuario);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Clientes = lista.Lista_Clientes;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+
+                res.Respuesta = "OK";
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "Error";
                 return res;
             }
             return res;
@@ -47,24 +86,33 @@ namespace BackVentasADO.Controllers
 
         [HttpPost]
         [Route("api/Clientes")]
-        public Resultado crearCliente([FromBody] crearClienteViewModel cli)
+        public Resultado crearCliente([FromBody] ClienteDTO cli)
         {
             Resultado res = new Resultado();
             try
             {
 
                 var cliente = _clientesService.crearCliente(cli);
-                res.respuesta = cliente;
-                res.mensaje = "OK";
-                if (cliente == null)
+
+
+                if (cliente.Respuesta == "OK")
                 {
-                    res.respuesta = "Identificacion del cliente ya existe";
+
+                    res.Respuesta = "OK";
+                   
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = cliente.Mensaje;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
@@ -73,26 +121,34 @@ namespace BackVentasADO.Controllers
 
 
         [HttpGet]
-        [Route("api/Clientes/{id:int}")]
-        public Resultado getCliente(int id)
+        [Route("api/Clientes")]
+        public csCliente getCliente(int clienteID)
         {
-            Resultado res = new Resultado();
+            csCliente res = new csCliente();
             try
             {
 
-                var cliente = _clientesService.getCliente(id);
-                res.respuesta = cliente;
-                res.mensaje = "OK";
+                var cliente = _clientesService.getCliente(clienteID);
 
-                if (cliente == null)
+                if (cliente.Respuesta == "OK")
                 {
-                    res.respuesta = "Cliente no existe";
+
+                    res.Respuesta = "OK";
+                    res.Cliente = cliente.Cliente;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = cliente.Mensaje;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
@@ -101,20 +157,29 @@ namespace BackVentasADO.Controllers
 
         [HttpPut]
         [Route("api/Clientes")]
-        public Resultado editarCliente(editarClienteViewModel cli)
+        public Resultado editarCliente(ClienteDTO cli)
         {
             Resultado res = new Resultado();
             try
             {
 
                 var cliente = _clientesService.editarCliente(cli);
-                res.respuesta = cliente;
-                res.mensaje = "OK";
+                if (cliente.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = cliente.Mensaje;
+                }
             }
             catch (Exception)
             {
 
-                res.mensaje = "Error";
+                res.Mensaje = "Error";
                 return res;
             }
 
@@ -131,13 +196,22 @@ namespace BackVentasADO.Controllers
 
                 var cliente = _clientesService.inactivarCliente(id);
 
-                res.respuesta = cliente;
-                res.mensaje = "OK";
+                if (cliente.Respuesta == "OK")
+                {
+
+                    res.Respuesta = cliente.Respuesta;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = cliente.Mensaje;
+                }
             }
             catch (Exception)
             {
 
-                res.mensaje = "Error";
+                res.Mensaje = "Error";
                 return res;
             }
 
@@ -155,13 +229,22 @@ namespace BackVentasADO.Controllers
 
                 var cliente = _clientesService.activarCliente(id);
 
-                res.respuesta = cliente;
-                res.mensaje = "OK";
+                if (cliente.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = cliente.Mensaje;
+                }
             }
             catch (Exception)
             {
 
-                res.mensaje = "Error";
+                res.Mensaje = "Error";
                 return res;
             }
 
@@ -169,27 +252,40 @@ namespace BackVentasADO.Controllers
 
         }
 
-        [HttpDelete]
-        [Route("api/Clientes/{id:int}")]
-        public Resultado deleteCliente(int id)
+        [HttpGet]
+        [Route("api/Clientes/CheckNIT")]
+        public ResultadoBoolean checNIT(string nit)
         {
-            Resultado res = new Resultado();
+            ResultadoBoolean res = new ResultadoBoolean();
             try
             {
 
-                var cliente = _clientesService.deleteCliente(id);
+                var cliente = _clientesService.checkNIT(nit);
 
-                res.respuesta = cliente;
-                res.mensaje = "OK";
+                if (cliente.Respuesta == "OK")
+                {
+
+                    res.Respuesta = cliente.Respuesta;
+                    res.Valor = cliente.Valor;
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Valor = false;
+                }
+
             }
             catch (Exception)
             {
 
-                res.mensaje = "Error";
+                res.Valor = false;
+                res.Respuesta = "ERROR";
                 return res;
             }
 
             return res;
+
         }
+
     }
 }

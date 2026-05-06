@@ -7,6 +7,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using BackVentasADO.Controllers.Services;
+using System.Collections;
+using BackVentasADO.Models;
 
 namespace BackVentasADO.Controllers
 {
@@ -14,33 +16,146 @@ namespace BackVentasADO.Controllers
     {
 
 
-        private  productosServices _productoService = new productosServices();
+        private  ProductosServices _productoService = new ProductosServices();
 
-        //public ProductosController(productosServices productoService)
-        //{
-        //    _productoService = productoService;
-        //}
-
-
-        [HttpPost]
-        [Route("api/Productos/Crear")]
-        public Resultado createProducto([FromBody] productoViewModel prod)
+        [HttpGet]
+        [Route("api/Productos/ProductosAll")]
+        public csListaProducto getProductosAll()
         {
-            Resultado res = new Resultado();
+
+            csListaProducto res = new csListaProducto();
             try
             {
 
+                var lista = _productoService.getProductos(null, null);
 
-                var producto = _productoService.crearProducto(prod);
+                if (lista.Respuesta == "OK")
+                {
 
+                    res.Respuesta = "OK";
+                    res.Lista_Productos = lista.Lista_Productos;
 
-                res.respuesta = producto;
-                res.mensaje = "OK";
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+
+            return res;
+
+        }
+
+        [HttpGet]
+        [Route("api/Productos/ProductosAllWeb")]
+        public csListaProducto getProductosAllWeb()
+        {
+
+            csListaProducto res = new csListaProducto();
+            try
+            {
+
+                var lista = _productoService.getProductosWeb(null, null);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Productos = lista.Lista_Productos;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+
+            return res;
+
+        }
+
+
+        [HttpGet]
+        [Route("api/Productos/ProductoPalabraClave")]
+        public csListaProducto getProductosPalabraClave(string pPalabraClave)
+        {
+
+            csListaProducto res = new csListaProducto();
+            try
+            {
+
+                var lista = _productoService.getProductosPalabraClave(pPalabraClave);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Productos = lista.Lista_Productos;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+
+            return res;
+
+        }
+
+        [HttpGet]
+        [Route("api/Productos/getProductosSync")]
+        public csListaProducto getProductosSync(int UsuarioID)
+        {
+
+            csListaProducto res = new csListaProducto();
+            try
+            {
+
+                var lista = _productoService.getProductosSync(true, UsuarioID);
+
+                if (lista.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Lista_Productos = lista.Lista_Productos;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
@@ -50,98 +165,143 @@ namespace BackVentasADO.Controllers
 
         [HttpGet]
         [Route("api/Productos/ProductosActivos")]
-        public Resultado getProductosActivos()
+        public csListaProducto getProductosActivos(int UsuarioID)
         {
-          
-            Resultado res = new Resultado();
+
+            csListaProducto res = new csListaProducto();
             try
             {
 
-                var lista = _productoService.getProductosActivos();
-                res.respuesta = lista;
-                res.mensaje = "OK";
-            }
-            catch (Exception)
-            {
+                var lista = _productoService.getProductos(true, UsuarioID);
 
-                res.mensaje = "Error";
-                return res;
-            }
-
-            return res;
-
-        }
-
-        [HttpGet]
-        [Route("api/Productos/ProductosAll")]
-        public Resultado getProductosAll()
-        {
-            Resultado res = new Resultado();
-            try
-            {
-
-                var lista = _productoService.getProductosAll();
-                res.respuesta = lista;
-                res.mensaje = "OK";
-            }
-            catch (Exception)
-            {
-
-                res.mensaje = "Error";
-                return res;
-            }
-
-            return res;
-
-        }
-
-        [HttpGet]
-        [Route("api/Productos/{id:int}")]
-        public Resultado getProducto(int id)
-        {
-            Resultado res = new Resultado();
-            try
-            {
-
-                var producto = _productoService.getProducto(id);
-
-
-
-                res.respuesta = producto;
-                if (producto == null)
+                if (lista.Respuesta == "OK")
                 {
-                    res.respuesta = "Producto no encontrado";
+
+                    res.Respuesta = "OK";
+                    res.Lista_Productos = lista.Lista_Productos;
+
                 }
-                res.mensaje = "OK";
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
             }
-            catch (Exception)
+            catch (Exception ex )
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
             return res;
+
         }
+
+
+
+        [HttpGet]
+        [Route("api/Productos")]
+        public csProducto getProducto(int Id, string SKU)
+        {
+            csProducto res = new csProducto();
+            try
+            {
+
+                var producto = _productoService.getProducto(Id, SKU);
+
+                if (producto.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+                    res.Producto = producto.Producto;
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = producto.Mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+
+            return res;
+
+        }
+
+        [HttpPost]
+        [Route("api/Productos/Crear")]
+        public Resultado createProducto([FromBody] ProductoDTO prod)
+        {
+            Resultado res = new Resultado();
+            try
+            {
+
+
+                var producto = _productoService.crearProducto(prod);
+
+
+                if (producto.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = producto.Mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+
+            return res;
+
+        }
+
+   
 
         [HttpPost]
         [Route("api/Productos/InactivarProducto")]
 
-        public Resultado inactivarProducto([FromBody] int id)
+        public Resultado inactivarProducto([FromBody] ProductoID prod)
         {
             Resultado res = new Resultado();
             try
             {
 
-                var producto = _productoService.inactivarProducto(id);
+                var producto = _productoService.inactivarProducto(prod.Id, prod.SKU);
 
-                res.respuesta = producto;
-                res.mensaje = "OK";
+                if (producto.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = producto.Mensaje;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
@@ -152,21 +312,31 @@ namespace BackVentasADO.Controllers
 
         [HttpPost]
         [Route("api/Productos/ActivarProducto")]
-        public Resultado activarProducto([FromBody] int id)
+        public Resultado activarProducto([FromBody] ProductoID prod)
         {
             Resultado res = new Resultado();
             try
             {
 
-                var producto = _productoService.activarProducto(id);
+                var producto = _productoService.activarProducto(prod.Id, prod.SKU);
 
-                res.respuesta = producto;
-                res.mensaje = "OK";
+                if (producto.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = producto.Mensaje;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
@@ -176,7 +346,7 @@ namespace BackVentasADO.Controllers
 
         [HttpPut]
         [Route("api/Productos")]
-        public Resultado editarProducto([FromBody] productoViewModel prod)
+        public Resultado editarProducto([FromBody] ProductoDTO prod)
         {
             Resultado res = new Resultado();
             try
@@ -184,48 +354,111 @@ namespace BackVentasADO.Controllers
 
                 var producto = _productoService.editProducto(prod);
 
-                res.respuesta = producto;
-                if (producto == null)
+                if (producto.Respuesta == "OK")
                 {
-                    res.respuesta = "Producto no existe";
+
+                    res.Respuesta = "OK";
+
                 }
-                res.mensaje = "OK";
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = producto.Mensaje;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
             return res;
         }
 
-        [HttpDelete]
-        [Route("api/Productos/{id:int}")]
-        public Resultado deleteProducto(int id)
+
+        [HttpGet]
+        [Route("api/Productos/ProductosFavoritos")]
+        public csListaProducto getProductosFavoritos(int UsuarioID)
         {
-            Resultado res = new Resultado();
+
+            csListaProducto res = new csListaProducto();
             try
             {
 
-                var producto = _productoService.deleteProducto(id);
+                var lista = _productoService.getProductosFavoritos(UsuarioID);
 
-                res.respuesta = producto;
-                if (producto == null)
+                if (lista.Respuesta == "OK")
                 {
-                    res.respuesta = "Producto no encontrado";
+
+                    res.Respuesta = "OK";
+                    res.Lista_Productos = lista.Lista_Productos;
+
                 }
-                res.mensaje = "OK";
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = lista.Mensaje;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                res.mensaje = "Error";
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
                 return res;
             }
 
             return res;
+
+        }
+
+        [HttpPost]
+        [Route("api/Productos/setProductoFavorito")]
+        public Resultado setProductoFavorito([FromBody] ProductoFavoritoRequest req)
+        {
+            Resultado producto = new Resultado();
+
+            Resultado res = new Resultado();
+            try
+            {
+
+                if (req.Activar)
+                {
+
+                    producto = _productoService.agregarFavorito(req.ProductoID, req.UsuarioID);
+                }
+                else
+                {
+
+                    producto = _productoService.eliminarFavorito(req.ProductoID, req.UsuarioID);    
+                }
+
+
+                if (producto.Respuesta == "OK")
+                {
+
+                    res.Respuesta = "OK";
+
+                }
+                else
+                {
+                    res.Respuesta = "ERROR";
+                    res.Mensaje = producto.Mensaje;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                res.Respuesta = "ERROR";
+                res.Mensaje = ex.ToString();
+                return res;
+            }
+
+            return res;
+
         }
 
     }

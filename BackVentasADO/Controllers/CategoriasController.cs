@@ -17,28 +17,28 @@ namespace BackVentasADO.Controllers
 
         [HttpGet]
         [Route("api/categoria")]
-        public Resultado getCategorias()
+        public ListaCategoria getCategorias()
         {
-            Resultado res=new Resultado();
+            ListaCategoria res =new ListaCategoria();
             try
             {
                 VentasEntities _context = new VentasEntities();
                 var lista = _context.Categorias
-                .Select(x => new CategoiaViewModel
+                .Select(x => new CategoriaDTO
                 {
-                    id = x.Id,
-                    nombre = x.Nombre,
+                    Id = x.Id,
+                    Nombre = x.Nombre,
                 })
                 .ToList();
 
-                res.respuesta = lista;
-                res.mensaje = "OK";
+                res.Lista_Categoria = lista;
+                res.Respuesta = "OK";
 
             }
             catch (Exception ex)
             {
-                res.respuesta = ex.Message;
-                res.mensaje = "Error";
+                res.Mensaje = ex.Message;
+                res.Respuesta = "Error";
                 return res;
 
             }

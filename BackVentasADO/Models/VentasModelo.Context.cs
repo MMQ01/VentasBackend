@@ -12,6 +12,8 @@ namespace BackVentasADO.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class VentasEntities : DbContext
     {
@@ -25,11 +27,34 @@ namespace BackVentasADO.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Asignacion_Clientes> Asignacion_Clientes { get; set; }
         public virtual DbSet<Categorias> Categorias { get; set; }
-        public virtual DbSet<Cliente> Cliente { get; set; }
-        public virtual DbSet<Pedidos> Pedidos { get; set; }
+        public virtual DbSet<PedidoDetalle> PedidoDetalle { get; set; }
+        public virtual DbSet<Usuarios> Usuarios { get; set; }
+        public virtual DbSet<Clientes> Clientes { get; set; }
         public virtual DbSet<Productos> Productos { get; set; }
-        public virtual DbSet<Productos_Pedidos> Productos_Pedidos { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<Pedidos> Pedidos { get; set; }
+        public virtual DbSet<Productos_Favoritos> Productos_Favoritos { get; set; }
+        public virtual DbSet<tmp_carrito> tmp_carrito { get; set; }
+    
+        public virtual int SPU_ESTADISTICA(ObjectParameter oVentas, ObjectParameter oPedidos, ObjectParameter oClientes, ObjectParameter oProductos)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPU_ESTADISTICA", oVentas, oPedidos, oClientes, oProductos);
+        }
+    
+        public virtual ObjectResult<SPU_TOP_USUARIO_Result> SPU_TOP_USUARIO()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPU_TOP_USUARIO_Result>("SPU_TOP_USUARIO");
+        }
+    
+        public virtual ObjectResult<SPU_ULTIMAS_VENTAS_Result> SPU_ULTIMAS_VENTAS()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPU_ULTIMAS_VENTAS_Result>("SPU_ULTIMAS_VENTAS");
+        }
+    
+        public virtual ObjectResult<SPU_STOCK_Result1> SPU_STOCK()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPU_STOCK_Result1>("SPU_STOCK");
+        }
     }
 }

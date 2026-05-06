@@ -17,13 +17,13 @@ namespace BackVentasADO.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Categorias()
         {
-            this.Cliente = new HashSet<Cliente>();
+            this.Usuarios = new HashSet<Usuarios>();
         }
     
         public int Id { get; set; }
         public string Nombre { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cliente> Cliente { get; set; }
+        public virtual ICollection<Usuarios> Usuarios { get; set; }
     }
 }
